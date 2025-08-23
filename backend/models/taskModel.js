@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-
 const taskSchema = new mongoose.Schema({
   title: {
     type: String,
@@ -14,6 +13,11 @@ const taskSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  priority: {
+    type: String,
+    enum: ["low", "medium", "high"],
+    default: "medium",
+  },
   user: {
     type: mongoose.Schema.ObjectId,
     ref: "User",
@@ -22,6 +26,10 @@ const taskSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now,
+  },
+  dueDate: {
+    type: Date,
+    default: null,
   },
 });
 

@@ -6,8 +6,10 @@ const { validationResult } = require("express-validator");
 // @route   POST /api/auth/register
 // @access  Public
 exports.register = async (req, res) => {
+  console.log("Tentative d'inscription avec les données:", req.body); //log ajoute
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
+    console.log("Erreurs de validation:", errors.array()); //log ajoute
     return res.status(400).json({ errors: errors.array() });
   }
 
@@ -15,21 +17,24 @@ exports.register = async (req, res) => {
 
   try {
     // Vérifier si l'utilisateur existe déjà
+    console.log("Vérification si l'utilisateur existe déjà..."); // log ajoute
     const userExists = await User.findOne({ email });
     if (userExists) {
+      console.log("L'utilisateur existe déjà"); // log ajoute
       return res.status(400).json({ message: "Cet utilisateur existe déjà" });
     }
 
     // Créer l'utilisateur
+    console.log("Création de l'utilisateur..."); // log ajoute
     const user = await User.create({
       name,
       email,
       password,
     });
-
+    console.log("Utilisateur créé avec succès:", user); // log ajoute
     // Générer le token
     const token = generateToken(user._id);
-
+    console.log("Token généré"); // log ajoute
     res.status(201).json({
       success: true,
       token,
@@ -40,7 +45,11 @@ exports.register = async (req, res) => {
       },
     });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("Erreur lors de l'inscription:", error); // ajouter
+    res.status(500).json({
+      message: "Erreur serveur lors de l'inscription", // ajouter
+      error: error.message,
+    });
   }
 };
 

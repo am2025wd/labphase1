@@ -1,75 +1,3 @@
-// PREMIERE PROPOSITION
-// const Task = require("../models/taskModel");
-
-// // Créer une tâche
-// exports.createTask = async (req, res) => {
-//   try {
-//     // Ajouter l'utilisateur connecté à la tâche
-//     req.body.user = req.user.id;
-
-//     const { title, description } = req.body;
-//     const task = new Task({ title, description });
-//     await task.save();
-//     res.status(201).json(task);
-//   } catch (error) {
-//     res.status(500).json({ message: error.message });
-//   }
-// };
-
-// // Obtenir toutes les tâches
-// exports.getAllTasks = async (req, res) => {
-//   try {
-//     const tasks = await Task.find();
-//     res.status(200).json(tasks);
-//   } catch (error) {
-//     res.status(500).json({ message: error.message });
-//   }
-// };
-
-// // Obtenir une tâche par ID
-// exports.getTaskById = async (req, res) => {
-//   try {
-//     const task = await Task.findById(req.params.id);
-//     if (!task) {
-//       return res.status(404).json({ message: "Tâche non trouvée" });
-//     }
-//     res.status(200).json(task);
-//   } catch (error) {
-//     res.status(500).json({ message: error.message });
-//   }
-// };
-
-// // Mettre à jour une tâche
-// exports.updateTask = async (req, res) => {
-//   try {
-//     const { title, description, completed } = req.body;
-//     const task = await Task.findByIdAndUpdate(
-//       req.params.id,
-//       { title, description, completed },
-//       { new: true }
-//     );
-//     if (!task) {
-//       return res.status(404).json({ message: "Tâche non trouvée" });
-//     }
-//     res.status(200).json(task);
-//   } catch (error) {
-//     res.status(500).json({ message: error.message });
-//   }
-// };
-
-// // Supprimer une tâche
-// exports.deleteTask = async (req, res) => {
-//   try {
-//     const task = await Task.findByIdAndDelete(req.params.id);
-//     if (!task) {
-//       return res.status(404).json({ message: "Tâche non trouvée" });
-//     }
-//     res.status(200).json({ message: "Tâche supprimée avec succès" });
-//   } catch (error) {
-//     res.status(500).json({ message: error.message });
-//   }
-// };
-
 const Task = require("../models/taskModel");
 
 // @desc    Créer une tâche
@@ -143,18 +71,45 @@ exports.updateTask = async (req, res) => {
 // @desc    Supprimer une tâche
 // @route   DELETE /api/tasks/:id
 // @access  Privé
+// controllers/taskController.js
+// Correction de la methode de suppression
 exports.deleteTask = async (req, res) => {
   try {
+    console.log("Tentative de suppression de la tâche avec ID:", req.params.id);
+    console.log(
+      "Utilisateur connecté:",
+      req.user ? req.user.id : "Non authentifié"
+    );
+
     const task = await Task.findById(req.params.id);
+
+    if (!task) {
+      console.log("Tâche non trouvée dans la base de données");
+      return res.status(404).json({ message: "Tâche non trouvée" });
+    }
+
+    console.log("Tâche trouvée:", task);
+    console.log("Propriétaire de la tâche:", task.user);
+    console.log("ID utilisateur connecté:", req.user.id);
 
     // Vérifier si la tâche appartient à l'utilisateur
     if (task.user.toString() !== req.user.id) {
-      return res.status(403).json({ message: "Non autorisé" });
+      console.log("Tentative de suppression non autorisée");
+      return res
+        .status(403)
+        .json({ message: "Non autorisé à supprimer cette tâche" });
     }
 
-    await task.remove();
+    // Utiliser deleteOne au lieu de remove (obsolète dans les versions récentes)
+    await Task.deleteOne({ _id: req.params.id });
+    console.log("Tâche supprimée avec succès");
+
     res.status(200).json({ message: "Tâche supprimée avec succès" });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("Erreur lors de la suppression de la tâche:", error);
+    res.status(500).json({
+      message: "Erreur lors de la suppression de la tâche",
+      error: error.message,
+    });
   }
 };
