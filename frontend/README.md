@@ -1,5 +1,7 @@
-Utilisation
-Inscription
+# Utilisation
+
+# Inscription
+
 Accédez à l'application à l'adresse http://localhost:3000
 Cliquez sur le lien "Pas encore de compte ? Inscrivez-vous"
 Remplissez le formulaire d'inscription avec :
@@ -7,12 +9,16 @@ Votre nom
 Votre adresse email
 Un mot de passe (minimum 6 caractères)
 Cliquez sur "S'inscrire"
-Connexion
+
+# Connexion
+
 Sur la page d'accueil, remplissez le formulaire de connexion avec :
 Votre adresse email
 Votre mot de passe
 Cliquez sur "Se connecter"
-Création d'une Tâche
+
+# Création d'une Tâche
+
 Après vous être connecté, vous verrez un formulaire pour créer une nouvelle tâche
 Remplissez les champs :
 Titre (obligatoire)
@@ -20,9 +26,10 @@ Description (obligatoire)
 Date limite (optionnelle)
 Priorité (Basse, Moyenne ou Haute)
 Cliquez sur "Ajouter la tâche"
-Gestion des Tâches
-Une fois vos tâches créées, vous pouvez :
 
+# Gestion des Tâches
+
+Une fois vos tâches créées, vous pouvez :
 Consulter la liste de toutes vos tâches
 Marquer une tâche comme terminée en cliquant sur le bouton correspondant
 Modifier une tâche en cliquant sur le bouton "Modifier"
@@ -30,73 +37,60 @@ Supprimer une tâche en cliquant sur le bouton "Supprimer"
 Déconnexion
 Pour vous déconnecter, cliquez sur le bouton "Déconnexion" dans le coin supérieur droit de l'interface.
 
-<!-- # Getting Started with Create React App
+# Tri des Tâches
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+- Reperez le menu deroulant "Trier par"
+  Cliquez sur le menu pour afficher les options
+  Selectionnez l'option de tri souaitee
+  Les taches se reorganisent instantanement selon le critere choisi
+  Pour voir par exemple les tâches urgentes en premier :
 
-## Available Scripts
+1. Cliquez sur "Trier par"
+2. Sélectionnez "Priorité (haute à basse)"
+3. Les tâches de haute priorité apparaissent en haut de la liste
 
-In the project directory, you can run:
+# Filtrage des Tâches
 
-### `npm start`
+Repérez le menu déroulant "Statut"
+Sélectionnez une option :
+"Toutes" pour voir toutes vos tâches
+"Actives" pour voir uniquement les tâches non terminées
+"Terminées" pour voir uniquement les tâches terminées
+Repérez le menu déroulant "Priorité"
+Sélectionnez une option :
+"Toutes" pour voir toutes les priorités
+"Basse", "Moyenne" ou "Haute" pour filtrer par priorité
+Pour voir par exemple uniquement les tâches urgentes non terminées :
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+1. Dans "Statut", sélectionnez "Actives"
+2. Dans "Priorité", sélectionnez "Haute"
+3. Seules les tâches actives de haute priorité s'affichent
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console. -->
+# Rechercher une Tâche
 
-<!-- ### `npm test`
+Repérez le champ "Rechercher"
+Commencez à taper un mot-clé (titre ou description de tâche)
+Les résultats s'affichent automatiquement après une courte pause
+Pour affiner votre recherche, combinez avec les filtres
+Pour trouver par exemple une tâche concernant un achat :
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+1. Dans le champ "Rechercher", tapez "acheter"
+2. Les tâches contenant "acheter" dans leur titre ou description s'affichent
+3. Pour ne voir que les achats urgents, sélectionnez "Haute" dans "Priorité"
 
-### `npm run build`
+# Combiner les Fonctionnalités
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Les fonctionnalités peuvent être combinées pour des recherches précises :
+Pour trouver par exemple les tâches de haute priorité concernant un projet spécifique :
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+1. Dans "Priorité", sélectionnez "Haute"
+2. Dans "Rechercher", tapez le nom du projet
+3. Dans "Trier par", sélectionnez "Date d'échéance (proche)"
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+# Réinitialiser les Filtres
 
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify) -->
+Pour revenir à l'affichage complet de vos tâches :
+Dans "Statut", sélectionnez "Toutes"
+Dans "Priorité", sélectionnez "Toutes"
+Videz le champ "Rechercher"
+Dans "Trier par", sélectionnez "Date de création (récente)" (option par défaut)

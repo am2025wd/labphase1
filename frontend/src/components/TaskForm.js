@@ -1,3 +1,4 @@
+// src/components/TaskForm.js
 import React, { useState } from "react";
 import { createTask } from "../services/api";
 
@@ -23,6 +24,7 @@ const TaskForm = ({ onTaskCreated }) => {
     setLoading(true);
 
     try {
+      console.log("Données du formulaire:", formData);
       await createTask(formData);
       setFormData({
         title: "",
@@ -30,8 +32,13 @@ const TaskForm = ({ onTaskCreated }) => {
         dueDate: "",
         priority: "medium",
       });
-      onTaskCreated();
+
+      // Notifier le composant parent qu'une tâche a été créée
+      if (onTaskCreated) {
+        onTaskCreated();
+      }
     } catch (err) {
+      console.error("Erreur lors de la création:", err);
       setError(
         err.response?.data?.message || "Erreur lors de la création de la tâche"
       );

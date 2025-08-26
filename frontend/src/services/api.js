@@ -27,20 +27,37 @@ api.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       localStorage.removeItem("token");
-      window.location.href = "/login";
+      window.location.href = "/";
     }
     return Promise.reject(error);
   }
 );
 
-// Fonctions pour les tâches
-export const createTask = async (taskData) => {
-  const response = await api.post("/tasks", taskData);
+// Fonctions pour l'authentification
+export const login = async (credentials) => {
+  const response = await api.post("/auth/login", credentials);
   return response.data;
 };
 
-export const getTasks = async () => {
-  const response = await api.get("/tasks");
+export const register = async (userData) => {
+  const response = await api.post("/auth/register", userData);
+  return response.data;
+};
+
+export const getMe = async () => {
+  const response = await api.get("/auth/me");
+  return response.data;
+};
+
+// Fonctions pour les tâches - CORRECTION: ne pas ajouter /tasks ici
+export const getTasks = async (params = "") => {
+  console.log("Appel API getTasks avec params:", params);
+  const response = await api.get(params); // Utiliser directement les params
+  return response.data;
+};
+
+export const createTask = async (taskData) => {
+  const response = await api.post("/tasks", taskData);
   return response.data;
 };
 
@@ -52,29 +69,6 @@ export const updateTask = async (taskId, taskData) => {
 export const deleteTask = async (taskId) => {
   const response = await api.delete(`/tasks/${taskId}`);
   return response.data;
-};
-
-// Fonctions pour l'authentification
-export const login = async (credentials) => {
-  const response = await api.post("/auth/login", credentials);
-  return response.data;
-};
-// Fonctions pour l'authentification (REGISTER)
-export const register = async (userData) => {
-  try {
-    const response = await api.post("/auth/register", userData);
-    return response.data;
-  } catch (error) {
-    console.error("Erreur API lors de l'inscription:", error);
-
-    // Extraire le message d'erreur de la réponse si disponible
-    const errorMessage =
-      error.response?.data?.message ||
-      error.response?.data?.errors?.[0]?.msg ||
-      "Erreur lors de l'inscription";
-
-    throw new Error(errorMessage);
-  }
 };
 
 export default api;

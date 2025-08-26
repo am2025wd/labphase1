@@ -1,53 +1,49 @@
-const User = require("../models/userModel");
 const jwt = require("jsonwebtoken");
-const { validationResult } = require("express-validator");
+const User = require("../models/userModel");
+
+// Générer un token JWT
+const generateToken = (id) => {
+  return jwt.sign({ id: id.toString() }, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRE,
+  });
+};
 
 // @desc    Inscription d'un utilisateur
 // @route   POST /api/auth/register
 // @access  Public
 exports.register = async (req, res) => {
-  console.log("Tentative d'inscription avec les données:", req.body); //log ajoute
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    console.log("Erreurs de validation:", errors.array()); //log ajoute
-    return res.status(400).json({ errors: errors.array() });
-  }
-
-  const { name, email, password } = req.body;
-
   try {
+    const { name, email, password } = req.body;
+
     // Vérifier si l'utilisateur existe déjà
-    console.log("Vérification si l'utilisateur existe déjà..."); // log ajoute
     const userExists = await User.findOne({ email });
     if (userExists) {
-      console.log("L'utilisateur existe déjà"); // log ajoute
       return res.status(400).json({ message: "Cet utilisateur existe déjà" });
     }
 
     // Créer l'utilisateur
-    console.log("Création de l'utilisateur..."); // log ajoute
     const user = await User.create({
       name,
       email,
       password,
     });
-    console.log("Utilisateur créé avec succès:", user); // log ajoute
+
     // Générer le token
     const token = generateToken(user._id);
-    console.log("Token généré"); // log ajoute
+
     res.status(201).json({
       success: true,
       token,
       user: {
-        id: user._id,
+        id: user._id.toString(),
         name: user.name,
         email: user.email,
       },
     });
   } catch (error) {
-    console.error("Erreur lors de l'inscription:", error); // ajouter
+    console.error("Erreur lors de l'inscription:", error);
     res.status(500).json({
-      message: "Erreur serveur lors de l'inscription", // ajouter
+      message: "Erreur serveur lors de l'inscription",
       error: error.message,
     });
   }
@@ -57,14 +53,9 @@ exports.register = async (req, res) => {
 // @route   POST /api/auth/login
 // @access  Public
 exports.login = async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
-  const { email, password } = req.body;
-
   try {
+    const { email, password } = req.body;
+
     // Vérifier si l'utilisateur existe
     const user = await User.findOne({ email }).select("+password");
     if (!user) {
@@ -84,19 +75,59 @@ exports.login = async (req, res) => {
       success: true,
       token,
       user: {
-        id: user._id,
+        id: user._id.toString(),
         name: user.name,
         email: user.email,
       },
+    });
+  } catch (error) {
+    console.error("Erreur lors de la connexion:", error);
+    res.status(500).json({
+      message: "Erreur serveur lors de la connexion",
+      error: error.message,
+    });
+  }
+};
+
+// @desc    Obtenir l'utilisateur connecté
+// @route   GET /api/auth/me
+// @access  Privé
+exports.getMe = async (req, res) => {
+  try {
+    // L'utilisateur est déjà disponible dans req.user grâce au middleware d'authentification
+    const user = await User.findById(req.user.id);
+
+    res.status(200).json({
+      id: user._id,
+      name: user.name,
+      email: user.email,
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-// Générer un token JWT
-const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRE,
-  });
+// @desc    Déboguer les données utilisateur
+// @route   GET /api/auth/debug
+// @access  Public
+exports.debugUser = async (req, res) => {
+  try {
+    const users = await User.find().select("-password");
+    const formattedUsers = users.map((user) => ({
+      id: user._id,
+      idType: typeof user._id,
+      idString: user._id.toString(),
+      name: user.name,
+      email: user.email,
+    }));
+
+    res.status(200).json({
+      message: "Données utilisateur pour débogage",
+      users: formattedUsers,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
+
+console.log("Exportation de authController"); // Log de débogage

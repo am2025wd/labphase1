@@ -1,6 +1,12 @@
+// src/App.js
 import React, { useState, useEffect } from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
-import { login, register } from "./services/api";
+import {
+  // BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import { login, register, getMe } from "./services/api";
 import TaskForm from "./components/TaskForm";
 import TaskList from "./components/TaskList";
 import "./App.css";
@@ -16,12 +22,29 @@ function App() {
     password: "",
   });
 
+  // Fonction pour rafraîchir les tâches après création/modification/suppression
+  const [refreshTasks, setRefreshTasks] = useState(0);
+  const refetchTasks = () => {
+    setRefreshTasks((prev) => prev + 1);
+  };
+
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      setUser({ token });
-    }
-    setLoading(false);
+    const checkAuth = async () => {
+      const token = localStorage.getItem("token");
+      if (token) {
+        try {
+          const response = await getMe();
+          setUser(response.user);
+        } catch (error) {
+          console.error("Token invalide:", error);
+          localStorage.removeItem("token");
+          setUser(null);
+        }
+      }
+      setLoading(false);
+    };
+
+    checkAuth();
   }, []);
 
   const handleAuth = async (e) => {
@@ -39,16 +62,21 @@ function App() {
         response = await register(formData);
       }
 
-      console.log("Réponse du backend:", response); // Log pour le débogage
+      console.log("Réponse d'authentification:", response);
 
+      // Stocker le token dans le localStorage
       localStorage.setItem("token", response.token);
+
+      // Stocker les informations de l'utilisateur
       setUser(response.user);
       setFormData({ name: "", email: "", password: "" });
     } catch (error) {
       console.error("Erreur d'authentification:", error);
-
-      // Afficher un message d'erreur plus détaillé
-      setAuthError(error.message || "Erreur d'authentification");
+      setAuthError(
+        error.response?.data?.message ||
+          error.message ||
+          "Erreur d'authentification"
+      );
     }
   };
 
@@ -149,8 +177,8 @@ function App() {
               path="/"
               element={
                 <>
-                  <TaskForm onTaskCreated={() => window.location.reload()} />
-                  <TaskList />
+                  <TaskForm onTaskCreated={refetchTasks} />
+                  <TaskList refreshTrigger={refreshTasks} />
                 </>
               }
             />

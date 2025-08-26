@@ -1,29 +1,22 @@
 const express = require("express");
-const { check } = require("express-validator");
-const { register, login } = require("../controllers/authController");
+const { protect } = require("../middleware/auth");
+const {
+  register,
+  login,
+  getMe,
+  debugUser,
+} = require("../controllers/authController");
 const router = express.Router();
 
-// Routes d'authentification
-router.post(
-  "/register",
-  [
-    check("name", "Le nom est requis").not().isEmpty(),
-    check("email", "Veuillez inclure un email valide").isEmail(),
-    check(
-      "password",
-      "Veuillez entrer un mot de passe de 6 caractères ou plus"
-    ).isLength({ min: 6 }),
-  ],
-  register
-);
+console.log("Chargement de authRoutes"); // Log de débogage
 
-router.post(
-  "/login",
-  [
-    check("email", "Veuillez inclure un email valide").isEmail(),
-    check("password", "Le mot de passe est requis").exists(),
-  ],
-  login
-);
+// Routes publiques
+router.post("/register", register);
+router.post("/login", login);
+router.get("/debug", debugUser);
 
+// Route protégée
+router.get("/me", protect, getMe);
+
+console.log("Exportation de authRoutes:", typeof router); // Log de débogage
 module.exports = router;

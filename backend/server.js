@@ -18,7 +18,10 @@ app.use(bodyParser.json());
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/tasks", taskRoutes);
-
+// Gestion des erreurs 404 last-ajout
+app.use((req, res) => {
+  res.status(404).json({ message: "Route non trouvée" });
+});
 // Middleware de gestion des erreurs
 app.use((err, req, res, next) => {
   console.error(err.stack);

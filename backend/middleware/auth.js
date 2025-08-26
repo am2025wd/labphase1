@@ -20,12 +20,20 @@ const protect = async (req, res, next) => {
   try {
     // Vérifier le token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    console.log("Token décodé:", decoded);
+
+    // Récupérer l'utilisateur à partir de l'ID
+    const user = await User.findById(decoded.id).select("-password");
+
+    if (!user) {
+      return res.status(401).json({ message: "Utilisateur non trouvé" });
+    }
 
     // Ajouter l'utilisateur à l'objet req
-    req.user = await User.findById(decoded.id);
-
+    req.user = user;
     next();
   } catch (error) {
+    console.error("Erreur de token:", error);
     return res.status(401).json({ message: "Non autorisé, token invalide" });
   }
 };
