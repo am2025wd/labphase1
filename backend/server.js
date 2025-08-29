@@ -13,7 +13,7 @@ connectDB();
 const app = express();
 
 // Middlewares
-app.use(cors());
+app.use(cors({ origin: "https://taskmanager-frontend-rtuc.onrender.com" }));
 app.use(express.json());
 
 // Routes API
