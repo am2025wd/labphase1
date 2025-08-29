@@ -25,10 +25,10 @@ app.get("/", (req, resp) => {
 });
 // Servir les fichiers statiques en production
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "public")));
+  app.use(express.static(path.join(__dirname, "../frontend/dist")));
 
   app.get("*", (req, res) => {
-    res.sendFile(path.resolve(__dirname, "public", "index.html"));
+    res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"));
   });
 }
 
@@ -36,4 +36,5 @@ const PORT = process.env.PORT || 10000; // Render utilise le port 10000
 
 app.listen(PORT, () => {
   console.log(`Serveur démarré sur le port ${PORT}`);
+  console.log();
 });
