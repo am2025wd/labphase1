@@ -20,6 +20,9 @@ app.use(express.json());
 app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/tasks", require("./routes/taskRoutes"));
 
+app.get("/", (req, resp) => {
+  resp.send("Hello api");
+});
 // Servir les fichiers statiques en production
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "public")));
