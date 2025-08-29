@@ -1,5 +1,5 @@
 const express = require("express");
-const path = require("path");
+
 const cors = require("cors");
 const dotenv = require("dotenv");
 const connectDB = require("./config/database");
@@ -24,13 +24,6 @@ app.get("/", (req, resp) => {
   resp.send("Hello api");
 });
 // Servir les fichiers statiques en production
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "../frontend/dist")));
-
-  app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"));
-  });
-}
 
 const PORT = process.env.PORT || 10000; // Render utilise le port 10000
 
